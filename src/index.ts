@@ -1,14 +1,12 @@
-import { fromEvent } from "rxjs";
-import { Todo } from "./Todo";
+import Vue from "vue";
+import Vuex from "vuex";
+import App from "./App.vue";
 
-const todo = new Todo();
+Vue.use(Vuex);
 
-fromEvent(
-  document.getElementsByClassName("add-button"),
-  "click"
-).subscribe(() => todo.addToDo("hoge"));
+import store from "./store";
 
-fromEvent(
-  document.getElementsByClassName("show-button"),
-  "click"
-).subscribe(() => alert(todo.getToDos()));
+new Vue({
+  render: h => h(App),
+  store
+}).$mount("#app");

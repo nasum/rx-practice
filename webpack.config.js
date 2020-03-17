@@ -1,3 +1,4 @@
+const VueLoaderPlugin = require("vue-loader/lib/plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 const path = require("path");
@@ -5,18 +6,31 @@ const path = require("path");
 module.exports = {
   mode: "development",
   entry: path.resolve(__dirname, "src", "index.ts"),
+  devtool: "inline-source-map",
   output: {
     path: path.resolve(__dirname, "dist"),
     filename: "bundle.js"
   },
   resolve: {
-    extensions: [".ts", ".js"]
+    alias: {
+      vue$: "vue/dist/vue.esm.js",
+      "@": path.resolve(__dirname, "src")
+    },
+    extensions: [".ts", ".js", ".vue"],
+    modules: ["node_modules"]
   },
   module: {
     rules: [
       {
-        test: /\.ts/,
-        loader: "ts-loader"
+        test: /\.vue$/,
+        loader: "vue-loader"
+      },
+      {
+        test: /\.ts$/,
+        loader: "ts-loader",
+        options: {
+          appendTsSuffixTo: [/\.vue$/]
+        }
       }
     ]
   },
@@ -24,6 +38,7 @@ module.exports = {
     new HtmlWebpackPlugin({
       title: "RX Test",
       template: path.resolve(__dirname, "src", "index.html")
-    })
+    }),
+    new VueLoaderPlugin()
   ]
 };
